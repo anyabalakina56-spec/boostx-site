@@ -1,0 +1,910 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BoostX — ИИ-авитолог для ремонта квартир в Telegram</title>
+<meta name="description" content="ИИ-авитолог в Telegram для компаний по ремонту квартир. Тест 3 дня: аудит объявлений по скриншотам, разбор конкурентов и помощь с ответами клиентам.">
+
+<style>
+:root {
+  --bg: #0B1440;
+  --bg2: #101B52;
+  --card: #14225F;
+  --blue: #1E5EFF;
+  --cyan: #00D4FF;
+  --txt: #FFFFFF;
+  --muted: #A9B4D6;
+  --ok: #3DDC97;
+  --warn: #FFB547;
+  --line: #25347A;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--cyan);
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+section {
+  padding: 72px 0;
+}
+
+h1 {
+  font-size: 44px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+h3 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+p.lead {
+  color: var(--muted);
+  font-size: 18px;
+  max-width: 720px;
+}
+
+.grad {
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 26px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  color: #fff;
+}
+
+.btn-ghost {
+  border: 1px solid var(--line);
+  color: var(--txt);
+  background: transparent;
+}
+
+header {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: rgba(11, 20, 64, .92);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.logo img {
+  height: 36px;
+}
+
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  margin-left: 22px;
+  font-size: 15px;
+}
+
+.hero {
+  padding: 96px 0 72px;
+}
+
+.hero .cta {
+  margin-top: 30px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero small {
+  display: block;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 720px;
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+}
+
+.g2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.g3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.card p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.b-now {
+  background: rgba(61, 220, 151, .15);
+  color: var(--ok);
+}
+
+.b-api {
+  background: rgba(255, 181, 71, .15);
+  color: var(--warn);
+}
+
+.note {
+  border-color: var(--blue);
+  background: rgba(30, 94, 255, .10);
+}
+
+.note p {
+  color: #E6ECFF;
+}
+
+.screen {
+  background: #070E2E;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.screen .bar {
+  background: var(--bg2);
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+
+.screen pre {
+  padding: 18px;
+  font-family: "SF Mono", Consolas, Menlo, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #E6ECFF;
+}
+
+.screen .kb {
+  display: flex;
+  gap: 8px;
+  padding: 0 18px 18px;
+  flex-wrap: wrap;
+}
+
+.screen .kb span {
+  border: 1px solid var(--blue);
+  color: var(--cyan);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.price {
+  position: relative;
+}
+
+.price .amt {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 6px 0 12px;
+}
+
+.price ul {
+  list-style: none;
+  margin: 12px 0 18px;
+}
+
+.price li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.price li::before {
+  content: "✓ ";
+  color: var(--ok);
+}
+
+.price.hot {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(30, 94, 255, .35);
+}
+
+.price.hot::after {
+  content: "Основной";
+  position: absolute;
+  top: -12px;
+  right: 18px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.no li {
+  color: var(--muted);
+  padding: 6px 0;
+  list-style: none;
+}
+
+.no li::before {
+  content: "— ";
+  color: var(--warn);
+}
+
+.steps {
+  counter-reset: s;
+}
+
+.steps .card {
+  position: relative;
+  padding-left: 64px;
+}
+
+.steps .card::before {
+  counter-increment: s;
+  content: counter(s);
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: -6px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  color: #fff;
+  font-size: 15px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6F7BA6;
+}
+
+form small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 820px) {
+  .g2,
+  .g3 {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 26px;
+  }
+
+  nav {
+    display: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">
+      <img src="logo.jpg" alt="BoostX">
+      BoostX
+    </div>
+
+    <nav>
+      <a href="#where">Где это работает</a>
+      <a href="#how">Что делает</a>
+      <a href="#examples">Примеры</a>
+      <a href="#price">Тарифы</a>
+      <a href="#test">Тест 3 дня</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>
+      ИИ-авитолог для ремонта квартир.<br>
+      <span class="grad">Отдел Авито у вас в Telegram.</span>
+    </h1>
+
+    <p class="lead" style="margin-top:18px">
+      Помогает находить слабые места в объявлениях, разбирать конкурентов,
+      готовить ответы клиентам и выстраивать понятный план действий по Авито.
+    </p>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="#test">Получить тест на 3 дня — 0 ₽</a>
+      <a class="btn btn-ghost" href="#examples">Посмотреть, как это выглядит</a>
+    </div>
+
+    <small>
+      Всё происходит в Telegram. Вы пишете боту BoostX — с вами общается настроенный
+      ИИ-ассистент, не менеджер. На тесте вы присылаете скриншоты и материалы,
+      после подключения возможна интеграция с вашим аккаунтом Авито.
+    </small>
+  </div>
+</section>
+
+<section id="where" style="background:var(--bg2)">
+  <div class="wrap">
+    <h2>Где всё это происходит</h2>
+
+    <p class="lead" style="margin-bottom:28px">
+      Никакого отдельного кабинета и сложной таблицы. Основная работа — в Telegram.
+    </p>
+
+    <div class="grid g3">
+      <div class="card">
+        <h3>Вы → Telegram-бот BoostX</h3>
+        <p>
+          Присылаете скриншоты объявлений, тексты, диалоги с клиентами и материалы конкурентов.
+          Получаете разбор, готовые формулировки и гипотезы.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Ваши клиенты → чаты Авито</h3>
+        <p>
+          После подключения ИИ может работать с чатами Авито в рамках согласованного сценария:
+          уточнять детали, помогать с ответами и передавать вам квалифицированные заявки.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Между ними → ИИ-логика</h3>
+        <p>
+          BoostX не делает платных действий самостоятельно. Любое продвижение,
+          изменение или расход бюджета происходит только после вашего подтверждения.
+        </p>
+      </div>
+    </div>
+
+    <div class="card note" style="margin-top:18px">
+      <h3>Важно: с вами общается ИИ, а не человек</h3>
+      <p>
+        Когда вы пишете в BoostX, вам отвечает настроенный ИИ-ассистент.
+        Он не выдаёт себя за сотрудника и не обещает то, чего не может проверить.
+        Человек участвует на этапе подключения: настройки базы знаний,
+        сценариев и логики работы именно под вашу компанию.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Что делает ИИ-авитолог</h2>
+
+    <p class="lead" style="margin-bottom:28px">
+      Задачи, которые обычно отдают авитологу: диагностика, упаковка,
+      ответы на обращения, контроль воронки и понятные действия на неделю.
+    </p>
+
+    <div class="grid g3">
+      <div class="card">
+        <span class="badge b-now">На тесте</span>
+        <h3>Аудит объявлений</h3>
+        <p>
+          Разбирает заголовок, первые фото, цену, оффер и текст объявления.
+          Даёт конкретные правки и объясняет, какую проблему каждая правка должна решить.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge b-now">На тесте</span>
+        <h3>Разбор конкурентов</h3>
+        <p>
+          Вы присылаете скриншоты конкурентов — ИИ сравнивает цену, оффер,
+          первые фото, формулировки и помогает найти отличие, которое можно проверить.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge b-now">На тесте</span>
+        <h3>Помощь с чатами</h3>
+        <p>
+          Пересылаете сообщение клиента — бот предлагает вариант ответа,
+          указывает, какие вопросы задать дальше, и оценивает качество лида.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge b-now">На тесте</span>
+        <h3>Гипотезы роста</h3>
+        <p>
+          Не просто «улучшите объявление», а конкретный план:
+          что видим, что меняем, что измеряем и какой результат считаем успешным.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge b-api">После подключения</span>
+        <h3>Работа с чатами Авито</h3>
+        <p>
+          Подключение сценариев ответов, квалификации обращений
+          и передачи горячих заявок в Telegram — в рамках доступных возможностей API.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge b-api">После подключения</span>
+        <h3>Контроль и продвижение</h3>
+        <p>
+          Рекомендации по продвижению и изменениям объявлений.
+          Платные действия выполняются исключительно после вашей кнопки подтверждения.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="examples" style="background:var(--bg2)">
+  <div class="wrap">
+    <h2>Как это выглядит в Telegram</h2>
+
+    <p class="lead" style="margin-bottom:28px">
+      Примеры формата сообщений. Цифры и объекты ниже — демонстрационные.
+    </p>
+
+    <div class="grid g2">
+
+      <div class="screen">
+        <div class="bar">Карточка лида → вам в Telegram</div>
+
+        <pre>🔥 Новый лид · Авито · 14:32
+Объявление: «Ремонт квартир под ключ — смета за 1 день»
+
+Объект: квартира, вторичка
+Площадь: 62 м², 2 комнаты
+Работы: косметика + санузел под ключ
+Район: Ново-Савиновский, Казань
+Срок старта: в течение месяца
+Бюджет: «около 600–700 тыс.»
+Замер: удобно в будни после 18:00
+Телефон: клиент оставил в чате ✅
+
+Оценка: горячий
+Причина: есть объект, объём работ, бюджет и срок.
+
+Рекомендация:
+связаться сегодня до 19:00.</pre>
+
+        <div class="kb">
+          <span>Открыть чат</span>
+          <span>Записать в замеры</span>
+          <span>Не целевой</span>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="bar">Помощь с ответом клиенту</div>
+
+        <pre>Клиент:
+Здравствуйте, сколько стоит ремонт двушки?
+
+BoostX:
+Чтобы дать ориентир, уточните, пожалуйста:
+какая площадь и какой формат нужен —
+косметический, капитальный или под ключ?
+
+Клиент:
+62 метра, косметика, но санузел полностью.
+
+BoostX — вариант ответа:
+«Понял. Для точной оценки нужно посмотреть
+состояние квартиры и состав работ. Можем
+сначала сориентировать по вашему плану:
+подскажите район и когда вам удобно принять
+замерщика — в будни или в выходные?»</pre>
+      </div>
+
+      <div class="screen">
+        <div class="bar">Мини-аудит объявления → вам в Telegram</div>
+
+        <pre>🔎 Аудит объявления
+
+Что видим:
+В заголовке есть «ремонт квартир под ключ»,
+но нет ориентира, который помогает клиенту
+быстро понять формат: срок, смета, гарантия
+или минимальный бюджет.
+
+Риск:
+Часть людей пишет с запросом на мелкие работы,
+а часть целевых клиентов не понимает,
+чем вы отличаетесь от похожих бригад.
+
+Что проверить:
+1. Добавить конкретный ориентир в заголовок.
+2. Первым фото поставить готовый результат.
+3. В первых строках отдельно обозначить,
+какие работы вы не берёте.
+
+Гипотеза:
+меньше нецелевых переписок и понятнее
+позиционирование для клиента.</pre>
+      </div>
+
+      <div class="screen">
+        <div class="bar">Гипотеза недели → вам в Telegram</div>
+
+        <pre>🧪 Гипотеза недели
+
+Что видим:
+У объявления «Ремонт ванной под ключ»
+просмотры сохраняются, но обращений стало меньше.
+
+В карточке нет ориентира по цене,
+а первое фото — крупный план плитки.
+Клиент не видит готовый результат и может
+не понимать порядок бюджета до обращения.
+
+Что предлагаем:
+1. Добавить в заголовок ориентир:
+   «от 120 000 ₽ · за 14 дней».
+2. Первым фото поставить «до/после».
+3. Уточнить в описании срок подготовки сметы.
+
+Чтобы сравнить подачу с конкурентами:
+пришлите 2–3 их скриншота. BoostX сравнит
+оффер, цену, первые фото и формулировки.
+
+Измеряем:
+контакты в день в течение 7 дней.</pre>
+
+        <div class="kb">
+          <span>Применить правки</span>
+          <span>Прислать конкурентов</span>
+          <span>Отложить</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Как проходит тест</h2>
+
+    <p class="lead" style="margin-bottom:24px">
+      Тест — это отдельный Telegram-бот. Без доступа к вашему аккаунту Авито и без обязательств.
+    </p>
+
+    <div class="grid g3 steps">
+      <div class="card">
+        <h3>Оставляете заявку</h3>
+        <p>
+          В течение рабочего дня пишем вам в Telegram и присылаем ссылку на BoostX Test.
+          Мы не звоним.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>3 дня общаетесь с ИИ-авитологом</h3>
+        <p>
+          Присылаете скриншоты объявления и текст — бот делает аудит.
+          Пересылаете сообщения клиентов — он предлагает ответ и оценивает лид.
+          Для сравнения с конкурентами присылаете их скриншоты:
+          бот разбирает цену, оффер, первые фото и формулирует гипотезы.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Решаете</h3>
+        <p>
+          Понравилось — обсуждаем подключение и сценарии работы с вашим аккаунтом.
+          Нет — просто закрываете чат. Никаких обязательств и навязчивых звонков.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="price" style="background:var(--bg2)">
+  <div class="wrap">
+    <h2>Тарифы</h2>
+
+    <div class="grid g3" style="margin-top:24px">
+
+      <div class="card price">
+        <h3>Тест</h3>
+
+        <div class="amt">
+          0 ₽
+          <span style="font-size:16px;color:var(--muted)">/ 3 дня</span>
+        </div>
+
+        <ul>
+          <li>Отдельный Telegram-бот</li>
+          <li>Аудит 1 объявления по скриншотам и тексту</li>
+          <li>Разбор пересланных сообщений клиентов</li>
+          <li>Варианты ответов и оценка качества лида</li>
+          <li>Разбор 1 конкурента по присланным скриншотам</li>
+          <li>План правок и гипотезы на неделю</li>
+          <li>Без подключения к вашему Авито</li>
+        </ul>
+
+        <a class="btn btn-ghost" href="#test">Получить тест</a>
+      </div>
+
+      <div class="card price hot">
+        <h3>ИИ-авитолог</h3>
+
+        <div class="amt">
+          9 900 ₽
+          <span style="font-size:16px;color:var(--muted)">/ мес</span>
+        </div>
+
+        <ul>
+          <li>Настроенные сценарии работы для вашей компании</li>
+          <li>Подключение к чатам Авито в рамках доступного API</li>
+          <li>Помощь с квалификацией обращений</li>
+          <li>Карточки лидов в Telegram</li>
+          <li>Лог лидов в таблице</li>
+          <li>Аудит объявлений и гипотезы роста</li>
+          <li>Рекомендации по продвижению</li>
+          <li>Платные действия — только после подтверждения</li>
+        </ul>
+
+        <a class="btn btn-primary" href="#test">Начать с теста</a>
+      </div>
+
+      <div class="card price">
+        <h3>Подключение</h3>
+
+        <div class="amt">разово</div>
+
+        <p style="margin-bottom:12px">
+          Стоимость фиксируется после диагностики на тесте.
+          Здесь настраивается всё, что специфично для вашей компании.
+        </p>
+
+        <ul>
+          <li>Настройка Telegram</li>
+          <li>Подготовка базы знаний по услугам и ценам</li>
+          <li>Настройка сценариев диалогов</li>
+          <li>Настройка отчётов и уведомлений</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="grid g2">
+      <div>
+        <h2>Чего мы не делаем</h2>
+        <p class="lead">
+          Честные границы, чтобы вы не ждали того, чего не будет.
+        </p>
+      </div>
+
+      <ul class="no">
+        <li>Не гарантируем рост заявок в конкретных цифрах</li>
+        <li>Не выдаём ИИ за человека — ни вам, ни вашим клиентам</li>
+        <li>Не звоним и не проводим созвоны: связь только в Telegram</li>
+        <li>Не заменяем замерщика, прораба и отдел продаж</li>
+        <li>Не делаем фото и видео для объявлений</li>
+        <li>Не тратим рекламный бюджет без вашего подтверждения</li>
+        <li>Не анализируем конкурентов без присланных материалов</li>
+        <li>На старте работаем только с ремонтом квартир</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="test" style="background:var(--bg2)">
+  <div class="wrap" style="max-width:640px">
+    <h2>Заявка на тест — 3 дня, 0 ₽</h2>
+
+    <p class="lead" style="margin-bottom:24px">
+      Мы не звоним. В течение рабочего дня напишем вам в Telegram
+      и пришлём ссылку на тестового ИИ-бота.
+    </p>
+
+    <form action="https://formspree.io/f/mrpblzzy" method="POST">
+
+      <label for="name">Имя</label>
+      <input
+        id="name"
+        type="text"
+        name="name"
+        placeholder="Как к вам обращаться"
+        required
+      >
+
+      <label for="telegram">Telegram — обязательно</label>
+      <input
+        id="telegram"
+        type="text"
+        name="telegram"
+        placeholder="@ник или номер телефона, к которому привязан Telegram"
+        required
+      >
+
+      <small>
+        Связываемся только в Telegram. Если указываете номер,
+        убедитесь, что на нём есть аккаунт Telegram.
+      </small>
+
+      <label for="avito">Ссылка на Авито — необязательно</label>
+      <input
+        id="avito"
+        type="url"
+        name="avito"
+        placeholder="Ссылка на профиль или объявление, если есть"
+      >
+
+      <small>
+        На тесте аудит проводится по скриншотам и тексту объявления,
+        которые вы отправите боту после получения доступа.
+      </small>
+
+      <label for="city">Город</label>
+      <input
+        id="city"
+        type="text"
+        name="city"
+        placeholder="Например: Казань"
+      >
+
+      <label for="comment">Что сейчас болит на Авито?</label>
+      <textarea
+        id="comment"
+        name="comment"
+        rows="3"
+        placeholder="Например: много нецелевых обращений, мало заявок, сложно отвечать в чатах"
+      ></textarea>
+
+      <input type="hidden" name="_subject" value="BoostX: заявка на тест">
+      <input type="text" name="_gotcha" style="display:none">
+
+      <button class="btn btn-primary" type="submit">
+        Отправить заявку
+      </button>
+
+      <small>
+        Нажимая кнопку, вы соглашаетесь на обработку персональных данных
+        для связи по заявке.
+      </small>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="logo" style="font-size:16px">
+        <img src="logo.jpg" alt="BoostX" style="height:26px">
+        BoostX
+      </div>
+
+      <div style="margin-top:6px">
+        ИП Балакин Денис Владимирович
+      </div>
+    </div>
+
+    <div style="text-align:right">
+      Вся работа и связь — в Telegram<br>
+      Тест 3 дня бесплатно · ИИ-авитолог — 9 900 ₽/мес
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
